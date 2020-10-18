@@ -20,19 +20,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+ Route::post('/login',[UserController::class,'login']);
+
+
+
 
 Route::middleware('auth:api')->group( function () {
 
-    
+ Route::get('/users',[UserController::class,'index']);
+
+Route::get('/users/{id}',[UserController::class,'show']);
+
+Route::post('/users/store',[UserController::class,'store']); 
 
 });
 
 
-Route::get('/users',[UserController::class,'index']);
 
-Route::get('/users/{id}',[UserController::class,'show']);
-
-Route::post('/users/store',[UserController::class,'store']);
 
 
 Route::get('/category',[CategoryController::class,'index']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Auth;
 class UserController extends Controller
 {
     /**
@@ -39,7 +40,7 @@ class UserController extends Controller
 
       public function store(Request $request)
     {
-        try {
+       try {
             $request->validate([
                 'name'     => 'required|string',
                 'email'    => 'required|string',
@@ -55,13 +56,52 @@ class UserController extends Controller
             $token = $user->createToken('access_token')->accessToken;
 
             return response([
+                'status'=>true,
+                'message'=>'user save success',
                 'user'         => $user,
                 'access_token' => $token
             ]);
         } catch (Exception $e) {
-            return response(['error' => $e->getMessage()]);
+            return response([
+                'status'=>false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
+
+
+
+ public function login(Request $request){
+
+   $validate=$request->validate([
+               
+                'email'    => 'required|string',
+                'password' => 'required|string',
+            ]);
+
+    if(Auth::attempt($validate)){
+        //$token = $user->createToken('Token Name')->accessToken;
+
+        $token = Auth::user()->createToken('access_token')->accessToken;
+            return response([
+            'status'=>true,
+            'message'=>"login success",
+            'access_token'=>$token
+        ]);
+      
+
+    }else{
+          return response([
+            'status'=>false,
+            'message'=>"do not match"
+        ]);
+
+    }
+
+ }
+
+
+
 
 
 
